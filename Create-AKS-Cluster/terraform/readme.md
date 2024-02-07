@@ -13,4 +13,12 @@ az role assignment create --role Contributor --scope /subscriptions/a328c5f3-dad
 
 kubectl delete pod -n kube-system ingress-appgw-deployment-6465f7ccdf-9wdfg
 
+## Cost Saving Options
 
+# Stop the AGIC ingress & K8S Cluster
+az aks stop --name kishore-aks-cluster --resource-group kishore-aks && 
+az network application-gateway stop --name kishore-appgw --resource-group kishore-aks
+
+# Start  the AGIC ingress & K8S Cluster
+az network application-gateway start --name kishore-appgw --resource-group kishore-aks && 
+az aks start --name kishore-aks-cluster --resource-group kishore-aks
