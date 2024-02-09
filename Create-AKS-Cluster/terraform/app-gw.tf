@@ -1,7 +1,7 @@
 resource "azurerm_application_gateway" "kishore_appgw" {
   name                = "kishore-appgw"
   location            = var.location
-  resource_group_name = var.rg
+  resource_group_name = azurerm_kubernetes_cluster.aks_cluster.node_resource_group
 
   sku {
     name     = "Standard_v2"
@@ -33,7 +33,7 @@ resource "azurerm_application_gateway" "kishore_appgw" {
   probe {
     name                = "appgw-http-probe"
     protocol            = "Http"
-    path                = "/healthz"
+    path                = "/"
     host                = "localhost"
     interval            = 30
     timeout             = 30
@@ -44,7 +44,7 @@ resource "azurerm_application_gateway" "kishore_appgw" {
   probe {
     name                = "appgw-https-probe"
     protocol            = "Https"
-    path                = "/healthz"
+    path                = "/"
     host                = "localhost"
     interval            = 30
     timeout             = 30
@@ -55,10 +55,9 @@ resource "azurerm_application_gateway" "kishore_appgw" {
   backend_http_settings {
     name                  = "appgw-http-settings"
     cookie_based_affinity = "Disabled"
-    path                  = "/"
     port                  = 80
     protocol              = "Http"
-    request_timeout       = 20
+    request_timeout       = 30
     probe_name            = "appgw-http-probe" # Associate HTTP probe with backend settings
   }
 
@@ -66,10 +65,9 @@ resource "azurerm_application_gateway" "kishore_appgw" {
   backend_http_settings {
     name                  = "appgw-https-settings"
     cookie_based_affinity = "Disabled"
-    path                  = "/"
     port                  = 443
     protocol              = "Https"
-    request_timeout       = 20
+    request_timeout       = 30
     probe_name            = "appgw-https-probe" # Associate HTTPS probe with backend settings
   }
 
@@ -88,6 +86,7 @@ resource "azurerm_application_gateway" "kishore_appgw" {
     http_listener_name         = "appgw-http-listener"
     backend_address_pool_name  = "appgw-backend-pool"
     backend_http_settings_name = "appgw-http-settings"
+    priority                   = 100 # Add a priority value here
   }
 
   #   # Web Application Firewall (WAF) Configuration

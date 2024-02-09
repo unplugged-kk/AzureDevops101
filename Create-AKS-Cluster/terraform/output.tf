@@ -8,3 +8,8 @@ output "kube_config" {
 
   sensitive = true
 }
+
+# Outputs the name of the node resource group created by AKS
+output "node_resource_group" {
+  value = azurerm_kubernetes_cluster.aks_cluster.node_resource_group
+}
