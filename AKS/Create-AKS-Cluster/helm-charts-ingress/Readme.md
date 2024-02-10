@@ -1,7 +1,18 @@
 kubectl create namespace cert-manager
-helm repo add jetstack https://charts.jetstack.io
+helm repo add jetstack https://charts.jetstack.io --force-update
 helm repo update
+
+helm install \
+  cert-manager jetstack/cert-manager \
+  --namespace cert-manager \
+  --create-namespace \
+  --version v1.14.1 \
+  --set installCRDs=true
+  
 helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.0.4 --set installCRDs=true
+
+
+
 
 if you see some deployments are failing upgrade the cert manager
 
